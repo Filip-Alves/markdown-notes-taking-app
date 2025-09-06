@@ -39,6 +39,22 @@ public class NoteController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody Note noteDetails) {
+        return noteService.updateNote(id, noteDetails)
+                .map(updatedNote -> new ResponseEntity<>(updatedNote, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
+        if (noteService.deleteNote(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping(value = "/{id}/html", produces = "text/html;charset=UTF-8")
     public ResponseEntity<String> getNoteAsHtml(@PathVariable Long id) {
         return noteService.getNoteAsHtml(id)

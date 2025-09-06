@@ -48,7 +48,6 @@
 			<version>0.64.8</version>
 		</dependency>
 
-		<!-- Configuration LanguageTool ENFIN CORRECTE grâce à ta recherche -->
 		<dependency>
 			<groupId>org.languagetool</groupId>
 			<artifactId>languagetool-core</artifactId>
@@ -56,7 +55,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.languagetool</groupId>
-			<artifactId>language-fr</artifactId> <!-- <<< LA CORRECTION EST ICI -->
+			<artifactId>language-fr</artifactId>
 			<version>6.4</version>
 		</dependency>
 	</dependencies>

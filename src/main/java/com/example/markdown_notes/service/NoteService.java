@@ -37,6 +37,29 @@ public class NoteService {
         return noteRepository.findById(id);
     }
 
+    public java.util.Optional<Note> updateNote(Long id, Note noteDetails) {
+        java.util.Optional<Note> optionalNote = noteRepository.findById(id);
+
+        if (optionalNote.isEmpty()) {
+            return java.util.Optional.empty();
+        }
+
+        Note existingNote = optionalNote.get();
+        existingNote.setTitle(noteDetails.getTitle());
+        existingNote.setContent(noteDetails.getContent());
+
+        Note updatedNote = noteRepository.save(existingNote);
+        return java.util.Optional.of(updatedNote);
+    }
+
+    public boolean deleteNote(Long id) {
+        if (noteRepository.existsById(id)) {
+            noteRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
     public java.util.Optional<String> getNoteAsHtml(Long id) {
         java.util.Optional<Note> noteOptional = noteRepository.findById(id);
 
