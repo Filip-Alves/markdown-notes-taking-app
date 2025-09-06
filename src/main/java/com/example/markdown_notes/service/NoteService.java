@@ -17,4 +17,12 @@ public class NoteService {
     public Note createNote(Note noteToCreate) {
         return noteRepository.save(noteToCreate);
     }
+
+    public java.util.List<Note> getAllNotes() {
+        return noteRepository.findAll();
+    }
+
+    public java.util.Optional<Note> getNoteById(Long id) {
+        return noteRepository.findById(id);
+    }
 }

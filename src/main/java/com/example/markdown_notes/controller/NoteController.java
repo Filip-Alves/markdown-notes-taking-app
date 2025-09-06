@@ -21,4 +21,21 @@ public class NoteController {
         Note createdNote = noteService.createNote(note);
         return new ResponseEntity<>(createdNote, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<java.util.List<Note>> getAllNotes() {
+        java.util.List<Note> notes = noteService.getAllNotes();
+        return new ResponseEntity<>(notes, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Note> getNoteById(@PathVariable Long id) {
+        java.util.Optional<Note> noteOptional = noteService.getNoteById(id);
+
+        if (noteOptional.isPresent()) {
+            return new ResponseEntity<>(noteOptional.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
