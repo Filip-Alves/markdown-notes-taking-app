@@ -38,4 +38,11 @@ public class NoteController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping(value = "/{id}/html", produces = "text/html;charset=UTF-8")
+    public ResponseEntity<String> getNoteAsHtml(@PathVariable Long id) {
+        return noteService.getNoteAsHtml(id)
+                .map(html -> new ResponseEntity<>(html, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
