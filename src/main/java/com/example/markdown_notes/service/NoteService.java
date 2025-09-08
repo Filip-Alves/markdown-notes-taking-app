@@ -1,5 +1,6 @@
 package com.example.markdown_notes.service;
 
+import com.example.markdown_notes.dto.CreateNoteRequestDTO;
 import com.example.markdown_notes.entity.Note;
 import com.example.markdown_notes.repository.NoteRepository;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -7,6 +8,10 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class NoteService {
@@ -25,8 +30,9 @@ public class NoteService {
         this.htmlRenderer = HtmlRenderer.builder(options).build();
     }
 
-    public Note createNote(Note noteToCreate) {
-        return noteRepository.save(noteToCreate);
+    public Note createNote(CreateNoteRequestDTO request) {
+        Note newNote = new Note(request.getTitle(), request.getContent());
+        return noteRepository.save(newNote);
     }
 
     public java.util.List<Note> getAllNotes() {
@@ -73,4 +79,5 @@ public class NoteService {
 
         return java.util.Optional.of(html);
     }
+
 }

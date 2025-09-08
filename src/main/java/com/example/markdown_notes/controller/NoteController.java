@@ -1,10 +1,12 @@
 package com.example.markdown_notes.controller;
 
+import com.example.markdown_notes.dto.CreateNoteRequestDTO;
 import com.example.markdown_notes.entity.Note;
 import com.example.markdown_notes.service.NoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -17,8 +19,8 @@ public class NoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Note> createNote(@RequestBody Note note) {
-        Note createdNote = noteService.createNote(note);
+    public ResponseEntity<Note> createNote(@RequestBody CreateNoteRequestDTO request) {
+        Note createdNote = noteService.createNote(request);
         return new ResponseEntity<>(createdNote, HttpStatus.CREATED);
     }
 
@@ -60,5 +62,26 @@ public class NoteController {
         return noteService.getNoteAsHtml(id)
                 .map(html -> new ResponseEntity<>(html, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    // Dans NoteController.java
+
+    @PostMapping("/upload")
+    public ResponseEntity<Note> uploadNote(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
+        try {
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("Le fichier ne peut pas être vide.");
+            }
+            String content = new String(file.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
+
+            CreateNoteRequestDTO request = new CreateNoteRequestDTO(title, content);
+            Note createdNote = noteService.createNote(request);
+
+            return new ResponseEntity<>(createdNote, HttpStatus.CREATED);
+        } catch (java.io.IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) { // fichier vide
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
