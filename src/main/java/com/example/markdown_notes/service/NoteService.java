@@ -2,6 +2,7 @@ package com.example.markdown_notes.service;
 
 import com.example.markdown_notes.dto.CreateNoteRequestDTO;
 import com.example.markdown_notes.entity.Note;
+import com.example.markdown_notes.exception.ResourceNotFoundException;
 import com.example.markdown_notes.repository.NoteRepository;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
@@ -39,45 +40,35 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
-    public java.util.Optional<Note> getNoteById(Long id) {
-        return noteRepository.findById(id);
+    public Note getNoteById(Long id) {
+        return noteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Note non trouvée avec l'ID : " + id));
     }
 
-    public java.util.Optional<Note> updateNote(Long id, Note noteDetails) {
-        java.util.Optional<Note> optionalNote = noteRepository.findById(id);
+    public Note updateNote(Long id, CreateNoteRequestDTO request) {
 
-        if (optionalNote.isEmpty()) {
-            return java.util.Optional.empty();
-        }
+        Note existingNote = noteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Impossible de mettre à jour. Note non trouvée avec l'ID : \" + id" + id));
 
-        Note existingNote = optionalNote.get();
-        existingNote.setTitle(noteDetails.getTitle());
-        existingNote.setContent(noteDetails.getContent());
+        existingNote.setTitle(request.getTitle());
+        existingNote.setContent(request.getContent());
 
-        Note updatedNote = noteRepository.save(existingNote);
-        return java.util.Optional.of(updatedNote);
+        return noteRepository.save(existingNote);
     }
 
-    public boolean deleteNote(Long id) {
-        if (noteRepository.existsById(id)) {
-            noteRepository.deleteById(id);
-            return true;
+    public void deleteNote(Long id) {
+        if (!noteRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Impossible de supprimer. Note non trouvée avec l'ID : " + id);
         }
-        return false;
+        noteRepository.deleteById(id);
     }
 
-    public java.util.Optional<String> getNoteAsHtml(Long id) {
-        java.util.Optional<Note> noteOptional = noteRepository.findById(id);
+    public String getNoteAsHtml(Long id) {
+        Note note = noteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Note non trouvée avec l'ID : " + id));
 
-        if (noteOptional.isEmpty()) {
-            return java.util.Optional.empty();
-        }
-
-        Note note = noteOptional.get();
         Node document = markdownParser.parse(note.getContent());
-        String html = htmlRenderer.render(document);
-
-        return java.util.Optional.of(html);
+        return htmlRenderer.render(document);
     }
 
 }

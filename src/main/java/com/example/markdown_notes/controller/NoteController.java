@@ -32,39 +32,27 @@ public class NoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Note> getNoteById(@PathVariable Long id) {
-        java.util.Optional<Note> noteOptional = noteService.getNoteById(id);
-
-        if (noteOptional.isPresent()) {
-            return new ResponseEntity<>(noteOptional.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Note note = noteService.getNoteById(id);
+        return ResponseEntity.ok(note);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody Note noteDetails) {
-        return noteService.updateNote(id, noteDetails)
-                .map(updatedNote -> new ResponseEntity<>(updatedNote, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody CreateNoteRequestDTO noteDetails) {
+        Note updatedNote = noteService.updateNote(id, noteDetails);
+        return new ResponseEntity<>(updatedNote, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
-        if (noteService.deleteNote(id)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        noteService.deleteNote(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "/{id}/html", produces = "text/html;charset=UTF-8")
     public ResponseEntity<String> getNoteAsHtml(@PathVariable Long id) {
-        return noteService.getNoteAsHtml(id)
-                .map(html -> new ResponseEntity<>(html, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        String html = noteService.getNoteAsHtml(id);
+        return new ResponseEntity<>(html, HttpStatus.OK);
     }
-
-    // Dans NoteController.java
 
     @PostMapping("/upload")
     public ResponseEntity<Note> uploadNote(@RequestParam("file") MultipartFile file, @RequestParam("title") String title) {
