@@ -1,0 +1,9 @@
+<div class="container mt-4">
+  <button class="btn btn-secondary mb-3" (click)="goBack()">Retour</button>
+  <div class="card" *ngIf="note">
+    <div class="card-body">
+      <h5 class="card-title">{{ note.title }}</h5>
+      <div class="card-text" [innerHTML]="renderMarkdown(note.content)"></div>
+    </div>
+  </div>
+</div>

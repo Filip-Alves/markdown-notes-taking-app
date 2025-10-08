@@ -1,0 +1,53 @@
+.note-card {
+  height: 300px;
+  max-height: 300px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.note-content-wrapper {
+  flex: 1;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.note-content {
+  height: 100%;
+  overflow-y: hidden;
+  padding-right: 10px;
+  font-size: 1rem;
+}
+
+::ng-deep.note-content h1,
+::ng-deep.note-content h2,
+::ng-deep.note-content h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+::ng-deep.note-content p,
+::ng-deep.note-content ul,
+::ng-deep.note-content ol {
+  font-size: 1rem;
+  margin: 0.3rem 0;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.alert-grammar {
+  font-size: 0.9rem;
+}
